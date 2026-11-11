@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S95 Shopping Admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101010;color:white;font-family:Arial;padding:20px}
+h1{color:#d4af37}
+.card{background:#202020;padding:18px;border-radius:12px;margin:15px 0}
+input{width:100%;padding:13px;margin:8px 0;border:1px solid #555;border-radius:7px;background:#303030;color:white}
+button{padding:12px 18px;background:#d4af37;border:0;border-radius:7px;font-weight:bold;margin:5px}
+.product{border-top:1px solid #555;padding:15px 0}
+.product img{width:110px;height:100px;object-fit:contain;background:white;border-radius:8px}
+</style>
+</head>
+<body>
+<h1>S95 SHOPPING</h1>
+<p>Mobile Admin Dashboard</p>
+
+<div class="card">
+<h2>Add / Edit Product</h2>
+<input id="name" placeholder="Product Name">
+<input id="price" type="number" placeholder="Price ₹">
+<input id="image" value="1794371352109.png" placeholder="Image URL">
+<img id="preview" src="1794371352109.png" style="width:130px;height:110px;object-fit:contain;background:white;border-radius:8px">
+<br>
+<button onclick="saveProduct()">Save Product</button>
+<button onclick="clearForm()">Clear</button>
+</div>
+
+<div class="card">
+<h2>Product List</h2>
+<div id="products"></div>
+</div>
+
+<script>
+let items=JSON.parse(localStorage.getItem("s95products")||"[]");
+let editIndex=-1;
+
+function showProducts(){
+ document.getElementById("products").innerHTML="";
+ items.forEach((p,i)=>{
+ let img=p.image||"";
+ document.getElementById("products").innerHTML+=`
+ <div class="product">
+ <img src="${img}" onerror="this.style.display='none'">
+ <h3>${p.name}</h3>
+ ₹${p.price}
+ <br>
+ <button onclick="editProduct(${i})">Edit</button>
+ <button onclick="deleteProduct(${i})">Delete</button>
+ </div>`;
+ });
+}
+
+function saveProduct(){
+ let name=document.getElementById("name").value.trim();
+ let price=document.getElementById("price").value;
+ let image=document.getElementById("image").value.trim();
+ if(!name||!price||!image){alert("Please fill all fields");return}
+ let product={name,price,image};
+ if(editIndex===-1){items.push(product)}
+ else{items[editIndex]=product}
+ localStorage.setItem("s95products",JSON.stringify(items));
+ clearForm();
+ showProducts();
+ alert("Product Saved!");
+}
+
+function editProduct(i){
+ let p=items[i];
+ document.getElementById("name").value=p.name;
+ document.getElementById("price").value=p.price;
+ document.getElementById("image").value=p.image||"";
+ editIndex=i;
+}
+
+function deleteProduct(i){
+ if(confirm("Delete this product?")){
+ items.splice(i,1);
+ localStorage.setItem("s95products",JSON.stringify(items));
+ showProducts();
+ }
+}
+
+function clearForm(){
+ document.getElementById("name").value="";
+ document.getElementById("price").value="";
+ document.getElementById("image").value="1794371352109.png";
+ editIndex=-1;
+}
+
+document.getElementById("image").addEventListener("input",function(){
+ document.getElementById("preview").src=this.value;
+});
+
+showProducts();
+</script>
+</body>
+</html>
