@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S95 Shopping</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090909;color:white;font-family:Arial}
+header{background:#000;padding:18px;border-bottom:2px solid #d4af37;display:flex;justify-content:space-between}
+.logo{color:#d4af37;font-size:22px;font-weight:bold}
+.hero{text-align:center;padding:35px 15px;background:#211a0c}
+.hero h1{color:#d4af37}
+.search{padding:15px}
+input{width:100%;padding:13px;border-radius:8px}
+h2{text-align:center;color:#d4af37}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
+.card{background:#191919;border:1px solid #51401d;border-radius:10px;padding:12px;text-align:center}
+.pic{font-size:45px;padding:20px;background:#252525}
+.price{color:#d4af37;font-size:19px;font-weight:bold}
+button{background:#d4af37;color:#111;border:0;padding:11px;border-radius:6px;font-weight:bold;width:100%}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">♛ S95 SHOPPING</div>
+<div>🛒 Cart: <span id="cart">0</span></div>
+</header>
+<div class="hero">
+<h1>SHOP SMART. SHOP S95.</h1>
+<p>Discover Amazing Products</p>
+</div>
+<div class="search">
+<input id="search" placeholder="Search Products..." oninput="showProducts()">
+</div>
+<h2>OUR PRODUCTS</h2>
+<div class="products" id="products"></div>
+<script>
+let cart=0;
+let products=JSON.parse(localStorage.getItem("s95products")||"[]");
+function showProducts(){
+products=JSON.parse(localStorage.getItem("s95products")||"[]");
+let q=document.getElementById("search").value.toLowerCase();
+let area=document.getElementById("products");
+area.innerHTML="";
+let list=products.filter(p=>p.name.toLowerCase().includes(q));
+if(list.length===0){area.innerHTML="<p>No products available yet.</p>";return;}
+list.forEach(p=>{
+let card=document.createElement("div");
+card.className="card";
+let pic=document.createElement("div");
+pic.className="pic";
+pic.textContent="🛍️";
+let name=document.createElement("h3");
+name.textContent=p.name;
+let price=document.createElement("p");
+price.className="price";
+price.textContent="₹"+p.price;
+let btn=document.createElement("button");
+btn.textContent="Add to Cart";
+btn.onclick=()=>{
+cart++;
+document.getElementById("cart").textContent=cart;
+alert("Product added to cart!");
+};
+card.append(pic,name,price,btn);
+area.appendChild(card);
+});
+}
+showProducts();
+</script>
+</body>
+</html>
