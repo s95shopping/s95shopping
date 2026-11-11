@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S95 Shopping Admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111;color:white;font-family:Arial,sans-serif}
+header{background:#000;padding:20px;border-bottom:2px solid #d4af37}
+h1{color:#d4af37;margin:0}
+main{padding:16px;max-width:800px;margin:auto}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:#222;padding:18px;border-radius:12px;border:1px solid #b99a35}
+.card h3{color:#d4af37;margin-top:0}
+.card strong{font-size:24px}
+section{background:#222;padding:16px;margin-top:18px;border-radius:12px}
+input,button{width:100%;padding:12px;margin:7px 0;border-radius:7px;border:0}
+input{background:#fff;color:#111}
+button{background:#d4af37;color:#111;font-weight:bold}
+.product{border-bottom:1px solid #555;padding:10px 0}
+small{color:#ccc}
+</style>
+</head>
+<body>
+<header>
+<h1>S95 SHOPPING</h1>
+<small>Mobile Admin Dashboard</small>
+</header>
+<main>
+<h2>Dashboard</h2>
+<div class="cards">
+<div class="card"><h3>Products</h3><strong id="count">0</strong></div>
+<div class="card"><h3>Orders</h3><strong>0</strong></div>
+<div class="card"><h3>Customers</h3><strong>0</strong></div>
+<div class="card"><h3>Sales</h3><strong>₹0</strong></div>
+</div>
+<section>
+<h2>Add New Product</h2>
+<input id="name" placeholder="Product Name">
+<input id="price" type="number" placeholder="Price ₹">
+<input id="image" placeholder="Image URL">
+<button onclick="addProduct()">Add Product</button>
+</section>
+<section>
+<h2>Product List</h2>
+<div id="products">No products added yet.</div>
+</section>
+</main>
+<script>
+let products=JSON.parse(localStorage.getItem("s95products")||"[]");
+function showProducts(){
+document.getElementById("count").innerText=products.length;
+document.getElementById("products").innerHTML=products.map((p,i)=>`
+<div class="product">
+<b>${p.name}</b><br>₹${p.price}
+<button onclick="deleteProduct(${i})">Delete</button>
+</div>`).join("")||"No products added yet.";
+}
+function addProduct(){
+let name=document.getElementById("name").value.trim();
+let price=Number(document.getElementById("price").value);
+if(!name||price<=0){alert("Enter valid product details");return;}
+products.push({name,price});
+localStorage.setItem("s95products",JSON.stringify(products));
+document.getElementById("name").value="";
+document.getElementById("price").value="";
+showProducts();
+}
+function deleteProduct(i){
+products.splice(i,1);
+localStorage.setItem("s95products",JSON.stringify(products));
+showProducts();
+}
+showProducts();
+</script>
+</body>
+</html>
