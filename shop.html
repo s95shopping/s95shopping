@@ -48,9 +48,17 @@ if(list.length===0){area.innerHTML="<p>No products available yet.</p>";return;}
 list.forEach(p=>{
 let card=document.createElement("div");
 card.className="card";
-let pic=document.createElement("div");
+let pic=document.createElement("img");
 pic.className="pic";
-pic.textContent="🛍️";
+pic.src=p.image || "1794371352109.png";
+pic.alt=p.name;
+pic.style.width="100%";
+pic.style.height="100px";
+pic.style.objectFit="contain";
+pic.style.padding="5px";
+pic.onerror=function(){
+  this.alt="Product image unavailable";
+};
 let name=document.createElement("h3");
 name.textContent=p.name;
 let price=document.createElement("p");
